@@ -7,10 +7,13 @@ import (
 )
 
 func main() {
-	c := canvas.New(10, 10)
-	err := c.DrawRectangle(1, 1, 3, 3, "@", "")
-	err = c.DrawRectangle(3, 3, 5, 5, "x", "")
-	err = c.DrawRectangle(9, 9, 2, 2, "o", "")
+	c := canvas.New(30, 30)
+	err := c.DrawRectangle(14, 1, 7, 6, ".", "")
+	assertNoErr(err)
+
+	err = c.DrawRectangle(1, 3, 8, 4, "", "0")
+	assertNoErr(err)
+	err = c.DrawRectangle(5, 5, 5, 3, "X", "X")
 	assertNoErr(err)
 
 	c.Draw()

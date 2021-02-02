@@ -35,20 +35,37 @@ func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) er
 		return errors.Wrap(err, "invalid rectangle filling")
 	}
 
+	if fill != "" {
+		c.fulfillRectangle(x, y, width, height, fill)
+	}
+
+	if outline != "" {
+		c.boundRectangle(x, y, width, height, outline)
+	}
+
+	return nil
+}
+
+func (c *Canvas) boundRectangle(x, y, width, height int, outline string) {
+	xEnd, yEnd := x+width-1, y+height-1
+	xCurrent := x
+	for xCurrent <= xEnd {
+		c.drawPoint(xCurrent, y, outline)
+		c.drawPoint(xCurrent, yEnd, outline)
+		xCurrent++
+	}
+
+	yCurrent := y
+	for yCurrent <= yEnd {
+		c.drawPoint(x, yCurrent, outline)
+		c.drawPoint(xEnd, yCurrent, outline)
+		yCurrent++
+	}
+}
+
+func (c *Canvas) fulfillRectangle(x, y, width, height int, fill string) {
 	yCurrent := y
 	xEnd, yEnd := x+width, y+height
-
-	//yFrom := start.Y - 1
-	//yTo := yFrom + height
-	//if yTo > sizeY-1 {
-	//	yTo = sizeY - 1
-	//}
-	//
-	//xFrom := start.X - 1
-	//xTo := xFrom + width
-	//if xTo > sizeX-1 {
-	//	xTo = sizeX - 1
-	//}
 
 	for yCurrent < yEnd {
 		xCurrent := x
@@ -58,8 +75,6 @@ func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) er
 		}
 		yCurrent++
 	}
-
-	return nil
 }
 
 func (c *Canvas) drawPoint(x, y int, symbol string) {
