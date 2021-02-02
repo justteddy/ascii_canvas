@@ -2,6 +2,8 @@ package canvas
 
 import (
 	"fmt"
+
+	"github.com/pkg/errors"
 )
 
 type Canvas struct {
@@ -24,7 +26,43 @@ func New(width, height int) *Canvas {
 	}
 }
 
-func (c *Canvas) DrawPoint(x, y int, symbol string) {
+func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) error {
+	if err := c.validateRectanglePosition(x, y, width, height); err != nil {
+		return errors.Wrap(err, "invalid rectangle position")
+	}
+
+	if err := c.validateRectangleFilling(fill, outline); err != nil {
+		return errors.Wrap(err, "invalid rectangle filling")
+	}
+
+	yCurrent := y
+	xEnd, yEnd := x+width, y+height
+
+	//yFrom := start.Y - 1
+	//yTo := yFrom + height
+	//if yTo > sizeY-1 {
+	//	yTo = sizeY - 1
+	//}
+	//
+	//xFrom := start.X - 1
+	//xTo := xFrom + width
+	//if xTo > sizeX-1 {
+	//	xTo = sizeX - 1
+	//}
+
+	for yCurrent < yEnd {
+		xCurrent := x
+		for xCurrent < xEnd {
+			c.drawPoint(xCurrent, yCurrent, fill)
+			xCurrent++
+		}
+		yCurrent++
+	}
+
+	return nil
+}
+
+func (c *Canvas) drawPoint(x, y int, symbol string) {
 	c.field[y-1][x-1] = symbol
 }
 

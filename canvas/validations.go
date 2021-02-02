@@ -24,11 +24,19 @@ func (c *Canvas) validateRectanglePosition(x, y, width, height int) error {
 		return errors.New("invalid rectangle height")
 	}
 
-	if x+width > c.width {
+	if x+width > c.width+1 {
 		return errors.New("width of the rectangle overlaps the canvas")
 	}
-	if y+height > c.height {
+	if y+height > c.height+1 {
 		return errors.New("height of the rectangle overlaps the canvas")
+	}
+
+	return nil
+}
+
+func (c *Canvas) validateRectangleFilling(fill, outline string) error {
+	if fill == "" && outline == "" {
+		return errors.New("one of either `fill` or `outline` should not be empty")
 	}
 
 	return nil
