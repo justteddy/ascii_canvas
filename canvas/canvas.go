@@ -2,28 +2,49 @@ package canvas
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/pkg/errors"
 )
 
+const (
+	canvasWidth  = 12
+	canvasHeight = 12
+)
+
 type Canvas struct {
-	height int
-	width  int
-	field  [][]string
+	field [canvasHeight][canvasWidth]string
 }
 
-func New(width, height int) *Canvas {
-	field := make([][]string, 0, height)
-	for i := 0; i < width; i++ {
-		columns := make([]string, width)
-		field = append(field, columns)
+func New() *Canvas {
+	return &Canvas{
+		field: [canvasHeight][canvasWidth]string{},
+	}
+}
+
+func (c *Canvas) FloodFill(x, y int, newSym string) error {
+	prevSym, err := c.pickPointSymbol(x, y)
+	if err != nil {
+		return err
 	}
 
-	return &Canvas{
-		height: height,
-		width:  width,
-		field:  field,
+	c.floodFill(x, y, prevSym, newSym)
+	return nil
+}
+
+func (c *Canvas) floodFill(x, y int, prevSym, newSym string) {
+	if x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight {
+		return
 	}
+	if c.field[y][x] != prevSym || c.field[y][x] == newSym {
+		return
+	}
+
+	c.drawPoint(x, y, newSym)
+	c.floodFill(x, y+1, prevSym, newSym)
+	c.floodFill(x, y-1, prevSym, newSym)
+	c.floodFill(x+1, y, prevSym, newSym)
+	c.floodFill(x-1, y, prevSym, newSym)
 }
 
 func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) error {
@@ -44,6 +65,13 @@ func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) er
 	}
 
 	return nil
+}
+
+func (c *Canvas) pickPointSymbol(x, y int) (string, error) {
+	if err := c.validatePointPosition(x, y); err != nil {
+		return "", errors.Wrap(err, "failed to pick symbol")
+	}
+	return c.field[y][x], nil
 }
 
 func (c *Canvas) boundRectangle(x, y, width, height int, outline string) {
@@ -78,10 +106,10 @@ func (c *Canvas) fulfillRectangle(x, y, width, height int, fill string) {
 }
 
 func (c *Canvas) drawPoint(x, y int, symbol string) {
-	c.field[y-1][x-1] = symbol
+	c.field[y][x] = symbol
 }
 
-func (c *Canvas) Draw() {
+func (c *Canvas) Render(w io.Writer) error {
 	result := ""
 	for _, rows := range c.field {
 		result += "|"
@@ -91,11 +119,13 @@ func (c *Canvas) Draw() {
 			} else {
 				result += sym
 			}
-			if x != c.width-1 {
+			if x != canvasWidth-1 {
 				result += "|"
 			}
 		}
 		result += "|\n"
 	}
-	fmt.Print(result)
+
+	_, err := fmt.Fprint(w, result)
+	return errors.Wrap(err, "failed to render canvas")
 }

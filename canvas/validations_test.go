@@ -11,65 +11,55 @@ import (
 
 func TestValidatePointPosition(t *testing.T) {
 	cases := []struct {
-		width, height int
-		x, y          int
-		expected      error
+		x, y     int
+		expected error
 	}{
 		{
-			width:    1,
-			height:   1,
-			x:        0,
+			x:        -1,
 			y:        1,
 			expected: errors.New("invalid x coordinate"),
 		},
 		{
-			width:    1,
-			height:   1,
 			x:        1,
-			y:        0,
+			y:        -1,
 			expected: errors.New("invalid y coordinate"),
 		},
 		{
-			width:    3,
-			height:   3,
-			x:        4,
+			x:        12,
 			y:        2,
 			expected: errors.New("invalid x coordinate"),
 		},
 		{
-			width:    3,
-			height:   3,
 			x:        2,
-			y:        4,
+			y:        12,
 			expected: errors.New("invalid y coordinate"),
 		},
 		{
-			width:    3,
-			height:   3,
-			x:        3,
-			y:        3,
+			x:        13,
+			y:        2,
+			expected: errors.New("invalid x coordinate"),
+		},
+		{
+			x:        2,
+			y:        13,
+			expected: errors.New("invalid y coordinate"),
+		},
+		{
+			x:        0,
+			y:        0,
 			expected: nil,
 		},
 		{
-			width:    3,
-			height:   3,
-			x:        1,
-			y:        1,
-			expected: nil,
-		},
-		{
-			width:    10,
-			height:   5,
-			x:        10,
-			y:        5,
+			x:        5,
+			y:        8,
 			expected: nil,
 		},
 	}
 
+	canvas := New()
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
-			canv := New(c.width, c.height)
-			err := canv.validatePointPosition(c.x, c.y)
+			err := canvas.validatePointPosition(c.x, c.y)
 			if err != nil {
 				require.Error(t, c.expected)
 				assert.Equal(t, c.expected.Error(), err.Error())
@@ -81,7 +71,6 @@ func TestValidatePointPosition(t *testing.T) {
 }
 
 func TestValidateRectanglePosition(t *testing.T) {
-	canv := New(10, 10)
 	cases := []struct {
 		x, y          int
 		width, height int
@@ -118,7 +107,7 @@ func TestValidateRectanglePosition(t *testing.T) {
 		{
 			x:        1,
 			y:        1,
-			width:    11,
+			width:    12,
 			height:   5,
 			expected: errors.New("width of the rectangle overlaps the canvas"),
 		},
@@ -126,13 +115,13 @@ func TestValidateRectanglePosition(t *testing.T) {
 			x:        1,
 			y:        1,
 			width:    5,
-			height:   11,
+			height:   12,
 			expected: errors.New("height of the rectangle overlaps the canvas"),
 		},
 		{
 			x:        5,
 			y:        5,
-			width:    7,
+			width:    8,
 			height:   3,
 			expected: errors.New("width of the rectangle overlaps the canvas"),
 		},
@@ -140,7 +129,7 @@ func TestValidateRectanglePosition(t *testing.T) {
 			x:        5,
 			y:        5,
 			width:    3,
-			height:   7,
+			height:   8,
 			expected: errors.New("height of the rectangle overlaps the canvas"),
 		},
 		{
@@ -160,15 +149,16 @@ func TestValidateRectanglePosition(t *testing.T) {
 		{
 			x:        1,
 			y:        1,
-			width:    10,
-			height:   10,
+			width:    11,
+			height:   11,
 			expected: nil,
 		},
 	}
 
+	canvas := New()
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
-			err := canv.validateRectanglePosition(c.x, c.y, c.width, c.height)
+			err := canvas.validateRectanglePosition(c.x, c.y, c.width, c.height)
 			if err != nil {
 				require.Error(t, c.expected)
 				assert.Equal(t, c.expected.Error(), err.Error())

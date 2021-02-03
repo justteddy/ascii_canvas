@@ -3,10 +3,10 @@ package canvas
 import "github.com/pkg/errors"
 
 func (c *Canvas) validatePointPosition(x, y int) error {
-	if x <= 0 || x > c.width {
+	if x < 0 || x >= canvasWidth {
 		return errors.New("invalid x coordinate")
 	}
-	if y <= 0 || y > c.height {
+	if y < 0 || y >= canvasHeight {
 		return errors.New("invalid y coordinate")
 	}
 	return nil
@@ -24,10 +24,10 @@ func (c *Canvas) validateRectanglePosition(x, y, width, height int) error {
 		return errors.New("invalid rectangle height")
 	}
 
-	if x+width > c.width+1 {
+	if x+width > canvasWidth {
 		return errors.New("width of the rectangle overlaps the canvas")
 	}
-	if y+height > c.height+1 {
+	if y+height > canvasHeight {
 		return errors.New("height of the rectangle overlaps the canvas")
 	}
 
