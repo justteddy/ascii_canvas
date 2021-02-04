@@ -26,7 +26,7 @@ func main() {
 	log.SetFormatter(&log.TextFormatter{})
 
 	sigCh := make(chan os.Signal, 1)
-	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGKILL)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	go func() {
 		sig := <-sigCh
 		log.Printf("interrupted with [%s] signal, bye", sig)
