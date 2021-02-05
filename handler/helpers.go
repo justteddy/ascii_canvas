@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const responseTemplate = `{"data": %s,"error":"%s"}`
+const responseTemplate = `{"data": %s,"error": "%s"}`
 
 func (h *Handler) storeCanvas(canvasID string, c *canvas.Canvas) ([]byte, error) {
 	data, err := c.Marshal()
@@ -21,7 +21,7 @@ func (h *Handler) storeCanvas(canvasID string, c *canvas.Canvas) ([]byte, error)
 	}
 
 	if err := h.storage.Set(canvasID, data, h.ttl); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "set canvas operation failed")
 	}
 
 	return data, nil
