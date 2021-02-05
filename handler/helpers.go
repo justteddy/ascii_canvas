@@ -2,8 +2,8 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
-	"strings"
 
 	"canvas/canvas"
 	store "canvas/storage"
@@ -11,6 +11,8 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
+
+const responseTemplate = `{"data": %s,"error":"%s"}`
 
 func (h *Handler) storeCanvas(canvasID string, c *canvas.Canvas) ([]byte, error) {
 	data, err := c.Marshal()
@@ -47,10 +49,21 @@ func (h *Handler) restoreCanvas(ctx context.Context, canvasID string) (*canvas.C
 	return canv, nil
 }
 
-func writeErrorResponse(ctx context.Context, w http.ResponseWriter, code int, err error) {
-	log.WithContext(ctx).WithError(err).Error("request failed")
+func writeSuccessResponse(ctx context.Context, w http.ResponseWriter, data []byte) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	if _, err := w.Write([]byte(fmt.Sprintf(responseTemplate, data, ""))); err != nil {
+		log.WithContext(ctx).WithError(err).Error("failed to write erroneous response")
+	}
+}
+
+func writeErrorResponse(ctx context.Context, w http.ResponseWriter, code int, handlerErr error) {
+	log.WithContext(ctx).WithError(handlerErr).Error("request failed")
+	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(code)
-	if _, err = w.Write([]byte(`{"error":"` + strings.TrimSpace(err.Error()) + `"}`)); err != nil {
+
+	if _, err := w.Write([]byte(fmt.Sprintf(responseTemplate, "[]", handlerErr))); err != nil {
 		log.WithContext(ctx).WithError(err).Error("failed to write erroneous response")
 	}
 }

@@ -25,23 +25,23 @@ func TestValidatePointPosition(t *testing.T) {
 			expected: errors.New("invalid y coordinate"),
 		},
 		{
-			x:        12,
+			x:        canvasWidth,
 			y:        2,
 			expected: errors.New("invalid x coordinate"),
 		},
 		{
 			x:        2,
-			y:        12,
+			y:        canvasHeight,
 			expected: errors.New("invalid y coordinate"),
 		},
 		{
-			x:        13,
+			x:        canvasWidth + 1,
 			y:        2,
 			expected: errors.New("invalid x coordinate"),
 		},
 		{
 			x:        2,
-			y:        13,
+			y:        canvasHeight + 1,
 			expected: errors.New("invalid y coordinate"),
 		},
 		{
@@ -107,7 +107,7 @@ func TestValidateRectanglePosition(t *testing.T) {
 		{
 			x:        1,
 			y:        1,
-			width:    12,
+			width:    canvasWidth,
 			height:   5,
 			expected: errors.New("width of the rectangle overlaps the canvas"),
 		},
@@ -115,7 +115,7 @@ func TestValidateRectanglePosition(t *testing.T) {
 			x:        1,
 			y:        1,
 			width:    5,
-			height:   12,
+			height:   canvasHeight,
 			expected: errors.New("height of the rectangle overlaps the canvas"),
 		},
 		{
@@ -149,8 +149,8 @@ func TestValidateRectanglePosition(t *testing.T) {
 		{
 			x:        1,
 			y:        1,
-			width:    11,
-			height:   11,
+			width:    canvasWidth - 1,
+			height:   canvasHeight - 1,
 			expected: nil,
 		},
 	}
