@@ -49,12 +49,11 @@ func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) er
 // FloodFill a flood fill operation
 // parameterised with x, y - start coordinates and newSym - fill character
 func (c *Canvas) FloodFill(x, y int, newSym string) error {
-	prevSym, err := c.pickPointSymbol(x, y)
-	if err != nil {
-		return err
+	if err := c.validatePointPosition(x, y); err != nil {
+		return errors.Wrap(err, "failed to pick symbol at start position")
 	}
 
-	c.floodFill(x, y, prevSym, newSym)
+	c.floodFill(x, y, c.pickPointSymbol(x, y), newSym)
 	return nil
 }
 
@@ -104,11 +103,8 @@ func (c *Canvas) fulfillRectangle(x, y, width, height int, fill string) {
 	}
 }
 
-func (c *Canvas) pickPointSymbol(x, y int) (string, error) {
-	if err := c.validatePointPosition(x, y); err != nil {
-		return "", errors.Wrap(err, "failed to pick symbol")
-	}
-	return c.field[y][x], nil
+func (c *Canvas) pickPointSymbol(x, y int) string {
+	return c.field[y][x]
 }
 
 func (c *Canvas) drawPoint(x, y int, symbol string) {
