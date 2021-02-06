@@ -12,7 +12,8 @@ This will start the service on port 8080
 
 ### Draw rectangle
 If the canvas doesn't exist, a new canvas will be created, and the rectangle will be drawn on it.
-If it exists, it will be modified.
+If it exists, it will be modified. Only single ASCII symbols are usable as `fill` and `outline` parameters. 
+One of either `fill` or `outline` should not be empty.
 ```shell
 curl --request PUT 'localhost:8080/canvas/5/drawRectangle' \
 --header 'Content-Type: application/json' \
@@ -28,7 +29,7 @@ curl --request PUT 'localhost:8080/canvas/5/drawRectangle' \
 
 ### Flood fill
 If the canvas doesn't exist, a new canvas will be created, and the rectangle will be drawn on it.
-If it exists, it will be modified.
+If it exists, it will be modified. Only single ASCII symbols are usable as `fill` parameter.
 ```shell
 curl --request PUT 'localhost:8080/canvas/8/floodFill' \
 --header 'Content-Type: application/json' \

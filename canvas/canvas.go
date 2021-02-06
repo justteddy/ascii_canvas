@@ -27,6 +27,10 @@ func New() *Canvas {
 // width, height, an optional fill and outline characters
 // one of either fill or outline should always be present
 func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) error {
+	if err := c.validatePointPosition(x, y); err != nil {
+		return errors.Wrap(err, "invalid rectangle start point")
+	}
+
 	if err := c.validateRectanglePosition(x, y, width, height); err != nil {
 		return errors.Wrap(err, "invalid rectangle position")
 	}
@@ -36,10 +40,16 @@ func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) er
 	}
 
 	if fill != "" {
+		if err := c.validateIsSingleASCII(fill); err != nil {
+			return errors.Wrap(err, "invalid rectangle fill symbol")
+		}
 		c.fulfillRectangle(x, y, width, height, fill)
 	}
 
 	if outline != "" {
+		if err := c.validateIsSingleASCII(outline); err != nil {
+			return errors.Wrap(err, "invalid rectangle outline symbol")
+		}
 		c.boundRectangle(x, y, width, height, outline)
 	}
 
@@ -51,6 +61,10 @@ func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) er
 func (c *Canvas) FloodFill(x, y int, newSym string) error {
 	if err := c.validatePointPosition(x, y); err != nil {
 		return errors.Wrap(err, "failed to pick symbol at start position")
+	}
+
+	if err := c.validateIsSingleASCII(newSym); err != nil {
+		return errors.Wrap(err, "invalid symbol for filling")
 	}
 
 	c.floodFill(x, y, c.pickPointSymbol(x, y), newSym)

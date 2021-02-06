@@ -1,6 +1,17 @@
 package canvas
 
-import "github.com/pkg/errors"
+import (
+	"unicode"
+
+	"github.com/pkg/errors"
+)
+
+func (c *Canvas) validateIsSingleASCII(s string) error {
+	if len(s) != 1 || s[0] > unicode.MaxASCII {
+		return errors.New("only single ASCII symbols are usable")
+	}
+	return nil
+}
 
 func (c *Canvas) validatePointPosition(x, y int) error {
 	if x < 0 || x >= canvasWidth {
@@ -13,10 +24,6 @@ func (c *Canvas) validatePointPosition(x, y int) error {
 }
 
 func (c *Canvas) validateRectanglePosition(x, y, width, height int) error {
-	if err := c.validatePointPosition(x, y); err != nil {
-		return err
-	}
-
 	if width <= 1 {
 		return errors.New("invalid rectangle width")
 	}

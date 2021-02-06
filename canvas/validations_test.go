@@ -9,6 +9,38 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestIsSingleASCII(t *testing.T) {
+	cases := []struct {
+		s       string
+		isASCII bool
+	}{
+		{
+			s:       "g",
+			isASCII: true,
+		},
+		{
+			s:       "#",
+			isASCII: true,
+		},
+		{
+			s:       "abc",
+			isASCII: false,
+		},
+		{
+			s:       "Ж",
+			isASCII: false,
+		},
+	}
+
+	canv := New()
+	for i, c := range cases {
+		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
+			err := canv.validateIsSingleASCII(c.s)
+			require.Equal(t, c.isASCII, err == nil)
+		})
+	}
+}
+
 func TestValidatePointPosition(t *testing.T) {
 	cases := []struct {
 		x, y     int
