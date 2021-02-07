@@ -51,6 +51,7 @@ func (h *Handler) restoreCanvas(ctx context.Context, canvasID string) (*canvas.C
 
 func writeSuccessResponse(ctx context.Context, w http.ResponseWriter, data []byte) {
 	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Access-Control-Allow-Origin", "*") // need for frontend
 	w.WriteHeader(http.StatusOK)
 
 	if _, err := w.Write([]byte(fmt.Sprintf(responseTemplate, data, ""))); err != nil {
@@ -61,6 +62,7 @@ func writeSuccessResponse(ctx context.Context, w http.ResponseWriter, data []byt
 func writeErrorResponse(ctx context.Context, w http.ResponseWriter, code int, handlerErr error) {
 	log.WithContext(ctx).WithError(handlerErr).Error("request failed")
 	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("Access-Control-Allow-Origin", "*") // need for frontend
 	w.WriteHeader(code)
 
 	if _, err := w.Write([]byte(fmt.Sprintf(responseTemplate, "[]", handlerErr))); err != nil {

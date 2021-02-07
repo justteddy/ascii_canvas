@@ -1,9 +1,6 @@
 package canvas
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/pkg/errors"
 )
 
@@ -123,25 +120,4 @@ func (c *Canvas) pickPointSymbol(x, y int) string {
 
 func (c *Canvas) drawPoint(x, y int, symbol string) {
 	c.field[y][x] = symbol
-}
-
-func (c *Canvas) Render(w io.Writer) error {
-	result := ""
-	for _, rows := range c.field {
-		result += "|"
-		for x, sym := range rows {
-			if sym == "" {
-				result += " "
-			} else {
-				result += sym
-			}
-			if x != canvasWidth-1 {
-				result += "|"
-			}
-		}
-		result += "|\n"
-	}
-
-	_, err := fmt.Fprint(w, result)
-	return errors.Wrap(err, "failed to render canvas")
 }
