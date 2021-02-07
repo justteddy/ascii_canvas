@@ -1,7 +1,7 @@
 # ASCII canvas
 
 ## Description
-You can find task description in [task/canvas.md](task/canvas.md).
+You can find task description here - [task/canvas.md](task/canvas.md).
 
 ## Start
 To run service in docker containers use `make run` or `docker-compose up`
