@@ -1,5 +1,8 @@
 # ASCII canvas
 
+## Description
+You can find task description in [task/canvas.md](task/canvas.md).
+
 ## Start
 To run service in docker containers use `make run` or `docker-compose up`
 
@@ -39,6 +42,9 @@ curl --request PUT 'localhost:8080/canvas/8/floodFill' \
     "fill": "-"
 }'
 ```
+
+## Frontend
+To run read-only client, open frontend/index.html in browser.
 
 ## Stop
 To stop service use `make down` or `docker-compose down`
