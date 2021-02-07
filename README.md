@@ -1,5 +1,7 @@
 # ASCII canvas
 
+![Go](https://github.com/justteddy/ascii_canvas/workflows/Go/badge.svg?branch=master)
+
 ## Description
 You can find task description here - [task/canvas.md](task/canvas.md).
 
