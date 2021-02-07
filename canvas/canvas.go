@@ -44,6 +44,9 @@ func (c *Canvas) DrawRectangle(x, y, width, height int, fill, outline string) er
 	}
 
 	if outline != "" {
+		if fill == "" {
+			c.fulfillRectangle(x, y, width, height, "")
+		}
 		if err := c.validateIsSingleASCII(outline); err != nil {
 			return errors.Wrap(err, "invalid rectangle outline symbol")
 		}

@@ -124,8 +124,8 @@ func TestDrawRectangles(t *testing.T) {
 		| | | | |*|*|*|*|*| | | |
 		| | | | |*|*|*|*|*| | | |
 		| | | | |*|*|.|.|.|.|.| |
-		| | | | |*|*|.|*|*| |.| |
-		| | | | |*|*|.|*|*| |.| |
+		| | | | |*|*|.| | | |.| |
+		| | | | |*|*|.| | | |.| |
 		| | | | | | |.| | | |.| |
 		| | | | | | |.|.|.|.|.| |
 		| | | | | | | | | | | | |
@@ -145,12 +145,12 @@ func TestDrawRectangles(t *testing.T) {
 		assert.Equal(t, ".", c.pickPointSymbol(8, 6))
 
 		assert.Equal(t, ".", c.pickPointSymbol(6, 7))
-		assert.Equal(t, "*", c.pickPointSymbol(7, 7))
-		assert.Equal(t, "*", c.pickPointSymbol(8, 7))
+		assert.Equal(t, "", c.pickPointSymbol(7, 7))
+		assert.Equal(t, "", c.pickPointSymbol(8, 7))
 
 		assert.Equal(t, ".", c.pickPointSymbol(6, 8))
-		assert.Equal(t, "*", c.pickPointSymbol(7, 8))
-		assert.Equal(t, "*", c.pickPointSymbol(8, 8))
+		assert.Equal(t, "", c.pickPointSymbol(7, 8))
+		assert.Equal(t, "", c.pickPointSymbol(8, 8))
 
 		// check inside of both rectangles
 		assert.Equal(t, "*", c.pickPointSymbol(5, 5))
